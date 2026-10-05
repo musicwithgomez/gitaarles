@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07121f">
+<meta name="description" content="Jouw Gitaar — persoonlijke online gitaarlessen.">
+<title>Jouw Gitaar — Mijn lessen</title>
+
+<style>
+:root{
+  --paper:#07121f;
+  --paper-2:#0a1828;
+  --ink:#f7fafc;
+  --muted:#91a3b6;
+  --line:rgba(255,255,255,.085);
+  --accent:#4ce1c3;
+  --accent-dark:#1db89c;
+  --accent-soft:#a8f6e7;
+  --cream:#102237;
+  --white:#132940;
+  --dark:#0e2033;
+  --dark-2:#102237;
+  --success:#1db89c;
+  --shadow:0 18px 50px rgba(0,0,0,.24);
+  --shadow-sm:0 8px 25px rgba(0,0,0,.18);
+  --radius:22px;
+  --radius-sm:14px;
+  --sidebar:250px;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+::selection{background:var(--accent-soft);color:var(--ink)}
+
+.container{width:min(1180px,calc(100% - 40px));margin:auto}
+.serif{font-family:var(--serif)}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--accent-dark);
+  font-size:.7rem;font-weight:900;letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:12px
+}
+.eyebrow::before{content:"✦";font-size:.75rem}
+h1,h2,h3{line-height:1.05;letter-spacing:-.035em}
+h1,h2{font-family:var(--serif);font-weight:500}
+h1{font-size:clamp(2.8rem,5vw,5rem)}
+h2{font-size:clamp(2rem,3.5vw,3.4rem)}
+h3{font-size:1.2rem}
+p{color:var(--muted)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:45px;padding:0 18px;border:1px solid transparent;
+  border-radius:999px;font-weight:850;font-size:.84rem;
+  transition:.22s ease;white-space:nowrap
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--ink);color:var(--paper)}
+.btn-primary:hover{background:#0a1828;box-shadow:0 10px 25px rgba(0,0,0,.30)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-dark)}
+.btn-light{background:var(--cream);border-color:var(--line)}
+.btn-light:hover{background:#fff}
+.btn-ghost{background:transparent;border-color:var(--line)}
+.btn-small{min-height:38px;padding:0 14px;font-size:.77rem}
+
+/* APP SHELL */
+.app{min-height:100svh}
+.sidebar{
+  position:fixed;z-index:100;left:0;top:0;bottom:0;width:var(--sidebar);
+  background:var(--dark);color:var(--paper);padding:25px 18px;
+  display:flex;flex-direction:column
+}
+.logo{display:flex;align-items:center;gap:9px;padding:4px 9px 30px;font-weight:900;letter-spacing:.08em;font-size:.84rem}
+.logo-mark{font-size:1.3rem;color:var(--accent)}
+.logo span{font-family:var(--serif);font-weight:500;letter-spacing:0}
+.student{
+  padding:15px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  border-radius:17px;margin-bottom:23px
+}
+.student-top{display:flex;align-items:center;gap:11px}
+.avatar{
+  width:39px;height:39px;border-radius:50%;background:var(--accent);
+  display:grid;place-items:center;font-family:var(--serif);font-size:1rem;color:#fff
+}
+.student strong{font-size:.83rem;display:block}
+.student span{font-size:.68rem;color:rgba(247,250,252,.5)}
+.side-label{
+  font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(247,250,252,.35);font-weight:900;padding:0 11px 8px
+}
+.side-nav{display:grid;gap:4px}
+.side-nav button{
+  width:100%;display:flex;align-items:center;gap:11px;padding:11px 12px;
+  color:rgba(247,250,252,.62);background:none;border:0;border-radius:12px;
+  text-align:left;font-size:.79rem;font-weight:750;transition:.2s
+}
+.side-nav button:hover,.side-nav button.active{background:rgba(255,255,255,.08);color:var(--paper)}
+.side-nav button.active::before{content:"";width:3px;height:18px;background:var(--accent);border-radius:5px;margin-left:-12px}
+.side-icon{width:19px;text-align:center;font-size:1rem}
+.sidebar-bottom{margin-top:auto;display:grid;gap:8px}
+.help-box{padding:15px;border-radius:16px;background:rgba(76,225,195,.12);border:1px solid rgba(76,225,195,.22)}
+.help-box strong{font-family:var(--serif);font-size:1rem;display:block;margin-bottom:4px}
+.help-box p{font-size:.69rem;color:rgba(247,250,252,.52);margin-bottom:10px}
+.help-box button{border:0;background:none;color:var(--accent-soft);font-size:.7rem;font-weight:850;padding:0}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);min-height:100svh}
+.topbar{
+  height:76px;border-bottom:1px solid var(--line);background:rgba(247,250,252,.86);
+  backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:space-between;
+  padding:0 34px;position:sticky;top:0;z-index:50
+}
+.breadcrumb{font-size:.72rem;color:var(--muted);font-weight:750}
+.breadcrumb b{color:var(--ink)}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:39px;height:39px;border:1px solid var(--line);background:var(--cream);
+  border-radius:50%;display:grid;place-items:center;color:var(--ink);transition:.2s
+}
+.icon-btn:hover{background:var(--white);transform:translateY(-1px)}
+.profile-mini{display:flex;align-items:center;gap:9px;font-size:.73rem;font-weight:800}
+.profile-mini .avatar{width:34px;height:34px;font-size:.8rem}
+
+.mobile-bar{display:none}
+.content{padding:42px 34px 80px}
+.view{display:none;animation:fade .3s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+/* DASHBOARD */
+.welcome{
+  display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-bottom:24px
+}
+.welcome-card{
+  background:var(--dark);color:var(--paper);border-radius:28px;padding:35px;
+  min-height:245px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between
+}
+.welcome-card::before{
+  content:"";position:absolute;width:310px;height:310px;border:1px solid rgba(255,255,255,.09);
+  border-radius:50%;right:-110px;bottom:-145px
+}
+.welcome-card::after{
+  content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(255,255,255,.07);
+  border-radius:50%;right:20px;bottom:-45px
+}
+.welcome-card > *{position:relative;z-index:1}
+.welcome-card h1{font-size:clamp(2.2rem,4vw,4rem);max-width:650px}
+.welcome-card h1 em{color:var(--accent-soft);font-style:normal}
+.welcome-card p{color:rgba(247,250,252,.62);font-size:.86rem;max-width:560px;margin-top:12px}
+.progress-card{
+  background:var(--cream);border:1px solid var(--line);border-radius:28px;padding:29px;
+  display:flex;flex-direction:column;justify-content:space-between
+}
+.progress-ring{
+  width:76px;height:76px;border-radius:50%;
+  background:conic-gradient(var(--accent) 0 42%,var(--paper-2) 42% 100%);
+  display:grid;place-items:center;position:relative
+}
+.progress-ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--cream)}
+.progress-ring span{position:relative;font-family:var(--serif);font-size:1.15rem}
+.progress-row{display:flex;justify-content:space-between;align-items:center}
+.progress-card h3{font-family:var(--serif);font-size:1.4rem;margin:16px 0 5px}
+.progress-card p{font-size:.73rem}
+.progress-bar{height:6px;background:var(--paper-2);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-fill{height:100%;width:42%;background:var(--accent);border-radius:inherit}
+
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:35px 0 17px}
+.section-head h2{font-size:2rem}
+.section-head p{font-size:.74rem}
+.text-link{border:0;background:none;color:var(--accent-dark);font-weight:850;font-size:.75rem}
+
+/* COURSE CARDS */
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.course-card{
+  background:var(--cream);border:1px solid var(--line);border-radius:21px;overflow:hidden;
+  transition:.25s;cursor:pointer
+}
+.course-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.course-art{
+  height:145px;background:var(--dark);color:var(--paper);padding:19px;
+  position:relative;overflow:hidden;display:flex;align-items:end
+}
+.course-art::before{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(255,255,255,.1);border-radius:50%;right:-60px;top:-80px}
+.course-art::after{content:"♫";position:absolute;right:24px;top:17px;font:6rem var(--serif);opacity:.07}
+.course-card:nth-child(2) .course-art{background:var(--paper-2);color:var(--ink)}
+.course-card:nth-child(3) .course-art{background:var(--accent);color:#fff}
+.course-number{font-size:.62rem;letter-spacing:.13em;font-weight:900;opacity:.5;position:absolute;top:17px;left:19px}
+.course-art h3{font-family:var(--serif);font-size:1.55rem;position:relative;z-index:1}
+.course-body{padding:19px}
+.course-body p{font-size:.74rem;line-height:1.55;min-height:43px}
+.course-meta{display:flex;gap:12px;color:var(--muted);font-size:.65rem;font-weight:750;margin-top:14px}
+.course-progress{height:4px;background:var(--paper-2);border-radius:99px;margin-top:16px;overflow:hidden}
+.course-progress span{display:block;height:100%;background:var(--accent)}
+.course-footer{display:flex;align-items:center;justify-content:space-between;margin-top:15px}
+.status{font-size:.65rem;font-weight:900;color:var(--success)}
+.lock{font-size:.67rem;color:var(--muted)}
+
+/* CONTINUE */
+.continue-card{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:22px;padding:21px;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px
+}
+.lesson-thumb{
+  width:100px;height:70px;border-radius:13px;background:var(--dark);color:rgba(247,250,252,.8);
+  display:grid;place-items:center;font-size:1.7rem;position:relative;overflow:hidden
+}
+.lesson-thumb::after{content:"";position:absolute;width:120px;height:120px;border:1px solid rgba(255,255,255,.1);border-radius:50%;right:-50px;bottom:-50px}
+.continue-copy small{font-size:.61rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-dark);font-weight:900}
+.continue-copy strong{display:block;font-family:var(--serif);font-size:1.2rem;margin:4px 0}
+.continue-copy p{font-size:.69rem}
+
+/* COURSE DETAIL */
+.course-hero{
+  background:var(--dark);color:var(--paper);border-radius:28px;padding:38px;
+  display:grid;grid-template-columns:1fr 280px;gap:35px;align-items:end;overflow:hidden;position:relative
+}
+.course-hero::before{content:"♫";position:absolute;right:90px;top:-45px;font:14rem var(--serif);opacity:.035}
+.course-hero > *{position:relative;z-index:1}
+.course-hero h1{font-size:clamp(2.5rem,5vw,4.5rem);max-width:750px}
+.course-hero h1 em{font-style:normal;color:var(--accent-soft)}
+.course-hero p{color:rgba(247,250,252,.6);max-width:680px;font-size:.86rem;margin-top:14px}
+.course-stats{display:grid;gap:9px}
+.stat{padding:13px 15px;border:1px solid rgba(255,255,255,.1);border-radius:13px;background:rgba(255,255,255,.04)}
+.stat span{display:block;font-size:.61rem;color:rgba(247,250,252,.4);text-transform:uppercase;letter-spacing:.1em;font-weight:800}
+.stat strong{font-size:.82rem;margin-top:2px;display:block}
+.detail-grid{display:grid;grid-template-columns:1fr 330px;gap:18px;margin-top:20px}
+.module-list,.side-panel{background:var(--cream);border:1px solid var(--line);border-radius:22px;padding:22px}
+.module-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.module-title h3{font-family:var(--serif);font-size:1.5rem}
+.module-title span{font-size:.65rem;color:var(--muted)}
+.module{
+  border:1px solid var(--line);border-radius:15px;margin-bottom:9px;overflow:hidden;background:var(--white)
+}
+.module-head{
+  width:100%;border:0;background:none;padding:16px;display:flex;align-items:center;gap:13px;text-align:left
+}
+.module-num{
+  width:31px;height:31px;border-radius:50%;background:var(--paper-2);
+  display:grid;place-items:center;font-family:var(--serif);font-size:.85rem;flex:none
+}
+.module.open .module-num{background:var(--accent);color:#fff}
+.module-head strong{font-size:.77rem}
+.module-head small{display:block;color:var(--muted);font-size:.63rem;margin-top:2px}
+.module-arrow{margin-left:auto;color:var(--muted);transition:.2s}
+.module.open .module-arrow{transform:rotate(180deg)}
+.module-lessons{display:none;border-top:1px solid var(--line)}
+.module.open .module-lessons{display:block}
+.lesson-row{
+  display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:11px;
+  width:100%;border:0;background:none;text-align:left;padding:13px 16px 13px 23px;
+  border-bottom:1px solid rgba(255,255,255,.055);transition:.2s
+}
+.lesson-row:last-child{border-bottom:0}
+.lesson-row:hover{background:var(--paper)}
+.lesson-row .play{
+  width:29px;height:29px;border-radius:50%;background:var(--paper-2);display:grid;place-items:center;font-size:.67rem
+}
+.lesson-row.done .play{background:var(--success);color:#fff}
+.lesson-row strong{font-size:.73rem}
+.lesson-row small{display:block;color:var(--muted);font-size:.6rem;margin-top:2px}
+.lesson-state{font-size:.62rem;color:var(--muted);font-weight:800}
+.lesson-row.done .lesson-state{color:var(--success)}
+.side-panel h3{font-family:var(--serif);font-size:1.45rem;margin-bottom:14px}
+.side-panel + .side-panel{margin-top:12px}
+.side-item{
+  padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start
+}
+.side-item:last-child{border-bottom:0}
+.side-item b{font-size:.72rem}
+.side-item span{font-size:.68rem;color:var(--muted)}
+.small-progress{height:5px;background:var(--paper-2);border-radius:99px;overflow:hidden;margin:8px 0 5px}
+.small-progress span{display:block;height:100%;background:var(--accent);width:42%}
+
+/* PLAYER */
+.player-layout{display:grid;grid-template-columns:1fr 330px;gap:18px}
+.player-main{min-width:0}
+.video{
+  aspect-ratio:16/9;background:#07121f;border-radius:24px;overflow:hidden;position:relative;
+  display:grid;place-items:center;color:var(--paper);box-shadow:var(--shadow)
+}
+.video-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px}
+.video-symbol{
+  width:72px;height:72px;border-radius:50%;background:var(--accent);
+  display:grid;place-items:center;font-size:1.3rem;margin-bottom:17px;box-shadow:0 12px 35px rgba(0,0,0,.25)
+}
+.video-placeholder strong{font-family:var(--serif);font-size:1.6rem}
+.video-placeholder p{color:rgba(247,250,252,.5);font-size:.7rem;margin-top:5px}
+.video-corner{position:absolute;top:17px;left:18px;font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(247,250,252,.38);font-weight:900}
+.player-info{padding:25px 2px}
+.player-info h1{font-size:2.35rem}
+.player-info p{font-size:.78rem;margin-top:9px;max-width:800px}
+.player-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
+.exercise-box{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:20px;padding:22px;margin-top:18px
+}
+.exercise-box h3{font-family:var(--serif);font-size:1.45rem;margin-bottom:7px}
+.exercise-box p{font-size:.74rem}
+.checklist{display:grid;gap:7px;margin-top:14px}
+.check{
+  display:flex;gap:9px;align-items:center;padding:10px 12px;border-radius:11px;background:rgba(255,255,255,.35);
+  font-size:.7rem;cursor:pointer
+}
+.check input{accent-color:var(--accent)}
+.next-card{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:20px}
+.next-card h3{font-family:var(--serif);font-size:1.35rem;margin-bottom:12px}
+.next-lesson{padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.next-lesson:last-child{border:0}
+.next-lesson strong{display:block;font-size:.72rem}
+.next-lesson span{font-size:.62rem;color:var(--muted)}
+.notes{margin-top:12px}
+.notes textarea{
+  width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);border-radius:13px;
+  padding:13px;background:var(--white);outline:none;color:var(--ink);font-size:.72rem
+}
+.notes textarea:focus{border-color:var(--accent)}
+
+/* SIMPLE PAGES */
+.simple-head{margin-bottom:24px}
+.simple-head h1{font-size:3.5rem}
+.simple-head p{font-size:.8rem;margin-top:9px}
+.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.resource{
+  background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:23px;transition:.2s
+}
+.resource:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.resource-icon{font-size:1.8rem;margin-bottom:24px}
+.resource h3{font-family:var(--serif);font-size:1.35rem;margin-bottom:7px}
+.resource p{font-size:.7rem}
+.resource button{margin-top:18px}
+
+/* LOGIN */
+.overlay{
+  position:fixed;inset:0;z-index:1000;background:rgba(10,15,12,.72);
+  backdrop-filter:blur(10px);display:none;place-items:center;padding:20px
+}
+.overlay.open{display:grid}
+.login{
+  width:min(460px,100%);background:var(--cream);border-radius:27px;padding:32px;
+  box-shadow:0 30px 90px rgba(0,0,0,.25);position:relative
+}
+.login-close{position:absolute;right:16px;top:16px;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:none}
+.login h2{font-size:2.5rem;margin-bottom:7px}
+.login > p{font-size:.76rem;margin-bottom:22px}
+.login-brand{font-size:.75rem;font-weight:900;letter-spacing:.1em;margin-bottom:25px}
+.field{display:grid;gap:6px;margin-bottom:12px}
+.field label{font-size:.64rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.field input{
+  width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;
+  padding:12px 13px;outline:none;color:var(--ink)
+}
+.field input:focus{border-color:var(--accent)}
+.login .btn{width:100%;margin-top:4px}
+.demo-note{margin-top:13px!important;text-align:center;font-size:.62rem!important;color:var(--muted)}
+.demo-note b{color:var(--accent-dark)}
+
+/* MOBILE */
+@media(max-width:1000px){
+  :root{--sidebar:0px}
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .mobile-bar{
+    display:flex;position:fixed;z-index:90;left:12px;right:12px;bottom:12px;
+    height:62px;background:var(--dark);border-radius:20px;padding:7px;
+    box-shadow:0 15px 40px rgba(0,0,0,.2);justify-content:space-around
+  }
+  .mobile-bar button{border:0;background:none;color:rgba(247,250,252,.5);font-size:.6rem;display:grid;gap:2px;place-items:center;padding:4px 10px}
+  .mobile-bar button span:first-child{font-size:1rem}
+  .mobile-bar button.active{color:var(--paper)}
+  .mobile-bar button.active span:first-child{color:var(--accent)}
+  body{padding-bottom:84px}
+  .welcome{grid-template-columns:1fr}
+  .course-grid{grid-template-columns:repeat(2,1fr)}
+  .detail-grid,.player-layout{grid-template-columns:1fr}
+  .course-hero{grid-template-columns:1fr}
+  .course-stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:650px){
+  .container{width:calc(100% - 28px)}
+  .topbar{height:66px;padding:0 14px}
+  .breadcrumb{font-size:.64rem}
+  .profile-mini span{display:none}
+  .content{padding:25px 14px 45px}
+  .welcome-card{padding:27px;min-height:275px;border-radius:22px}
+  .progress-card{border-radius:22px}
+  .section-head{margin-top:28px}
+  .section-head h2{font-size:1.7rem}
+  .course-grid,.resource-grid{grid-template-columns:1fr}
+  .course-art{height:155px}
+  .continue-card{grid-template-columns:1fr;gap:12px}
+  .lesson-thumb{width:100%;height:130px}
+  .course-hero{padding:27px;border-radius:22px}
+  .course-hero h1{font-size:2.7rem}
+  .course-stats{grid-template-columns:1fr}
+  .module-list,.side-panel{padding:16px;border-radius:18px}
+  .simple-head h1{font-size:2.8rem}
+  .video{border-radius:18px}
+  .player-info h1{font-size:1.95rem}
+  .login{padding:26px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+
+/* BRAND + CONTRAST POLISH — kleuren/leesbaarheid בלבד */
+button, input, textarea, select{color:inherit}
+
+/* Keep the app chrome dark so all navigation text stays readable. */
+.topbar{background:rgba(10,24,40,.94);color:var(--ink)}
+.breadcrumb b{color:var(--ink)}
+.icon-btn{color:var(--ink)}
+
+/* Mint is an accent surface: use dark brand text instead of white. */
+.btn-accent{color:var(--paper)}
+.btn-accent:hover{color:var(--paper)}
+.avatar{color:var(--paper)}
+.course-card:nth-child(3) .course-art{color:var(--paper)}
+
+/* All course/module headings and controls inherit the intended light text. */
+.module-head,.module-head strong,.module-head button,
+.lesson-row,.lesson-row strong,.next-lesson,.next-lesson strong,
+.course-body,.course-body h3,.continue-copy strong,
+.side-panel h3,.next-card h3,.section-head h2,.simple-head h1,
+.player-info h1,.player-info h2,.player-info h3{color:var(--ink)}
+
+/* Secondary text remains muted, but never falls back to browser-black. */
+.module-head small,.module-head span,.lesson-row small,.lesson-state,
+.next-lesson span,.course-meta,.lock,.breadcrumb,.section-head p,
+.simple-head p,.player-info p{color:var(--muted)}
+
+/* Strong text on dark hero surfaces. */
+.welcome-card,.course-hero,.lesson-thumb{color:var(--ink)}
+.welcome-card p,.course-hero p{color:rgba(247,250,252,.78)}
+
+/* Inputs use the dark brand surface and high-contrast text. */
+.notes textarea,.field input{background:var(--white);color:var(--ink)}
+.notes textarea::placeholder,.field input::placeholder{color:var(--muted)}
+
+/* Keyboard focus: clearly visible on every interactive control. */
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <a href="#" class="logo"><span class="logo-mark">♪</span><span>JOUW GITAAR</span></a>
+
+    <div class="student">
+      <div class="student-top">
+        <div class="avatar">N</div>
+        <div><strong>Nicolas</strong><span>Leerling · Groei</span></div>
+      </div>
+    </div>
+
+    <div class="side-label">Mijn leeromgeving</div>
+    <nav class="side-nav">
+      <button class="active" data-view="dashboard"><span class="side-icon">⌂</span> Overzicht</button>
+      <button data-view="course"><span class="side-icon">♫</span> Mijn cursus</button>
+      <button data-view="player"><span class="side-icon">▶</span> Verder leren</button>
+      <button data-view="resources"><span class="side-icon">▤</span> Oefeningen & materiaal</button>
+      <button data-view="notes"><span class="side-icon">✎</span> Mijn notities</button>
+    </nav>
+
+    <div class="side-label" style="margin-top:24px">Account</div>
+    <nav class="side-nav">
+      <button id="profileBtn"><span class="side-icon">◯</span> Mijn profiel</button>
+      <button id="loginBtn"><span class="side-icon">↪</span> Uitloggen</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="help-box">
+        <strong>Even vastgelopen?</strong>
+        <p>Een vraag over een les of oefening?</p>
+        <button onclick="alert('Hier kun je later je WhatsApp-link of contactpagina koppelen.')">Stuur een bericht →</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="breadcrumb" id="breadcrumb"><b>Mijn lessen</b> <span>·</span> Overzicht</div>
+      <div class="top-actions">
+        <button class="icon-btn" title="Zoeken" onclick="alert('Zoekfunctie klaar om later aan een echte cursusdatabase te koppelen.')">⌕</button>
+        <button class="icon-btn" title="Meldingen" onclick="alert('Hier kunnen later meldingen over nieuwe lessen komen.')">♢</button>
+        <div class="profile-mini"><span>Nicolas</span><div class="avatar">N</div></div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section class="view active" id="dashboard">
+        <div class="welcome">
+          <div class="welcome-card">
+            <div>
+              <div class="eyebrow" style="color:var(--accent-soft)">Welkom terug</div>
+              <h1>Vandaag weer een beetje <em>beter.</em></h1>
+              <p>Geen haast. Eén les, één oefening of tien minuten spelen is genoeg om vooruit te gaan.</p>
+            </div>
+            <div><button class="btn btn-accent" data-view="player">Verder met les 03 →</button></div>
+          </div>
+
+          <div class="progress-card">
+            <div class="progress-row">
+              <div>
+                <div class="eyebrow">Jouw voortgang</div>
+                <h3>Fundamenten</h3>
+                <p>8 van 19 lessen afgerond</p>
+              </div>
+              <div class="progress-ring"><span>42%</span></div>
+            </div>
+            <div>
+              <div class="progress-bar"><div class="progress-fill"></div></div>
+              <p style="margin-top:8px;font-size:.65rem">Nog 11 lessen tot je volgende mijlpaal.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div><div class="eyebrow">Ga verder</div><h2>Jouw leerpad</h2></div>
+          <button class="text-link" data-view="course">Bekijk alles →</button>
+        </div>
+
+        <div class="continue-card">
+          <div class="lesson-thumb">▶</div>
+          <div class="continue-copy">
+            <small>Les 03 · Akkoorden</small>
+            <strong>Je eerste akkoordwissels</strong>
+            <p>12 min · 1 oefening · Je was hier gebleven</p>
+          </div>
+          <button class="btn btn-primary" data-view="player">Verder kijken →</button>
+        </div>
+
+        <div class="section-head">
+          <div><div class="eyebrow">Mijn cursussen</div><h2>Waar wil je vandaag aan werken?</h2></div>
+        </div>
+
+        <div class="course-grid">
+          <article class="course-card" data-view="course">
+            <div class="course-art"><span class="course-number">01 · FUNDAMENT</span><h3>Gitaar vanaf nul</h3></div>
+            <div class="course-body">
+              <p>De complete basis: houding, akkoorden, ritme en je eerste nummers.</p>
+              <div class="course-meta"><span>19 lessen</span><span>± 4 uur</span></div>
+              <div class="course-progress"><span style="width:42%"></span></div>
+              <div class="course-footer"><span class="status">42% voltooid</span><span class="lock">Actief →</span></div>
+            </div>
+          </article>
+
+          <article class="course-card" data-view="course">
+            <div class="course-art"><span class="course-number">02 · SONGS</span><h3>Speel je favoriete songs</h3></div>
+            <div class="course-body">
+              <p>Leer nummers spelen zonder te verdwalen in eindeloze theorie.</p>
+              <div class="course-meta"><span>12 lessen</span><span>± 2,5 uur</span></div>
+              <div class="course-progress"><span style="width:12%"></span></div>
+              <div class="course-footer"><span class="status">12% voltooid</span><span class="lock">Actief →</span></div>
+            </div>
+          </article>
+
+          <article class="course-card" data-view="course">
+            <div class="course-art"><span class="course-number">03 · NEXT LEVEL</span><h3>Riffs & improvisatie</h3></div>
+            <div class="course-body">
+              <p>Voor wanneer de basis er staat: riffs, solo's, timing en je eigen sound.</p>
+              <div class="course-meta"><span>24 lessen</span><span>± 6 uur</span></div>
+              <div class="course-progress"><span style="width:0%"></span></div>
+              <div class="course-footer"><span class="status">Beschikbaar</span><span class="lock">Start →</span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="section-head">
+          <div><div class="eyebrow">Kleine stap</div><h2>Vandaag oefenen</h2></div>
+        </div>
+        <div class="resource-grid">
+          <article class="resource"><div class="resource-icon">🎸</div><h3>Akkoordwissels</h3><p>5 minuten · G → C → D. Focus op rustig en gelijkmatig wisselen.</p><button class="btn btn-light btn-small" onclick="openExercise('Akkoordwissels')">Oefening openen</button></article>
+          <article class="resource"><div class="resource-icon">🥁</div><h3>Strumming</h3><p>10 minuten · Down/up-patroon met een eenvoudige metronoom.</p><button class="btn btn-light btn-small" onclick="openExercise('Strumming')">Oefening openen</button></article>
+          <article class="resource"><div class="resource-icon">🎵</div><h3>Speel een nummer</h3><p>15 minuten · Gebruik wat je al kent en speel zonder te stoppen.</p><button class="btn btn-light btn-small" onclick="openExercise('Speel een nummer')">Oefening openen</button></article>
+        </div>
+      </section>
+
+      <!-- COURSE -->
+      <section class="view" id="course">
+        <div class="course-hero">
+          <div>
+            <div class="eyebrow" style="color:var(--accent-soft)">Mijn cursus · Fundament</div>
+            <h1>Gitaar <em>vanaf nul.</em></h1>
+            <p>Een rustig opgebouwd leerpad waarin je vanaf je eerste akkoord naar echte nummers gaat. Elke les is kort genoeg om vandaag te doen.</p>
+          </div>
+          <div class="course-stats">
+            <div class="stat"><span>Voortgang</span><strong>8 / 19 lessen</strong></div>
+            <div class="stat"><span>Totale duur</span><strong>± 4 uur video</strong></div>
+            <div class="stat"><span>Niveau</span><strong>Beginner</strong></div>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="module-list">
+            <div class="module-title"><h3>Jouw modules</h3><span>19 lessen · 4 modules</span></div>
+
+            <div class="module open">
+              <button class="module-head"><div class="module-num">1</div><div><strong>Je gitaar leren kennen</strong><small>5 lessen · 38 min</small></div><span class="module-arrow">⌄</span></button>
+              <div class="module-lessons">
+                <button class="lesson-row done" data-lesson="Welkom — zo werkt de cursus"><div class="play">✓</div><div><strong>Welkom — zo werkt de cursus</strong><small>05:20 · Video</small></div><span class="lesson-state">Voltooid</span></button>
+                <button class="lesson-row done" data-lesson="Hoe houd je een gitaar vast?"><div class="play">✓</div><div><strong>Hoe houd je een gitaar vast?</strong><small>07:10 · Video</small></div><span class="lesson-state">Voltooid</span></button>
+                <button class="lesson-row done" data-lesson="Snaren, frets & akkoorden"><div class="play">✓</div><div><strong>Snaren, frets & akkoorden</strong><small>08:45 · Video + oefening</small></div><span class="lesson-state">Voltooid</span></button>
+                <button class="lesson-row done" data-lesson="Je eerste aanslag"><div class="play">✓</div><div><strong>Je eerste aanslag</strong><small>06:25 · Video</small></div><span class="lesson-state">Voltooid</span></button>
+                <button class="lesson-row" data-lesson="Oefening: open snaren"><div class="play">▶</div><div><strong>Oefening: open snaren</strong><small>10:00 · Oefening</small></div><span class="lesson-state">Start</span></button>
+              </div>
+            </div>
+
+            <div class="module open">
+              <button class="module-head"><div class="module-num">2</div><div><strong>Je eerste akkoorden</strong><small>5 lessen · 52 min</small></div><span class="module-arrow">⌄</span></button>
+              <div class="module-lessons">
+                <button class="lesson-row done" data-lesson="Het G-akkoord"><div class="play">✓</div><div><strong>Het G-akkoord</strong><small>09:15 · Video + PDF</small></div><span class="lesson-state">Voltooid</span></button>
+                <button class="lesson-row done" data-lesson="Het C-akkoord"><div class="play">✓</div><div><strong>Het C-akkoord</strong><small>08:50 · Video + PDF</small></div><span class="lesson-state">Voltooid</span></button>
+                <button class="lesson-row" data-lesson="Het D-akkoord"><div class="play">▶</div><div><strong>Het D-akkoord</strong><small>11:40 · Video + oefening</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Akkoordwissels"><div class="play">▶</div><div><strong>Akkoordwissels zonder stoppen</strong><small>12:20 · Video + oefening</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Mini challenge: 60 seconden"><div class="play">▶</div><div><strong>Mini challenge: 60 seconden</strong><small>10:00 · Challenge</small></div><span class="lesson-state">Start</span></button>
+              </div>
+            </div>
+
+            <div class="module">
+              <button class="module-head"><div class="module-num">3</div><div><strong>Ritme & strumming</strong><small>5 lessen · 61 min</small></div><span class="module-arrow">⌄</span></button>
+              <div class="module-lessons">
+                <button class="lesson-row" data-lesson="Downstrokes"><div class="play">▶</div><div><strong>Downstrokes</strong><small>10:30 · Video</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Down-up patroon"><div class="play">▶</div><div><strong>Down-up patroon</strong><small>12:15 · Video + oefening</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Metronoom gebruiken"><div class="play">▶</div><div><strong>Metronoom gebruiken</strong><small>09:40 · Video</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Je eerste ritme"><div class="play">▶</div><div><strong>Je eerste ritme</strong><small>13:20 · Video + oefening</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Ritme challenge"><div class="play">▶</div><div><strong>Ritme challenge</strong><small>15:00 · Challenge</small></div><span class="lesson-state">Start</span></button>
+              </div>
+            </div>
+
+            <div class="module">
+              <button class="module-head"><div class="module-num">4</div><div><strong>Je eerste nummer</strong><small>4 lessen · 48 min</small></div><span class="module-arrow">⌄</span></button>
+              <div class="module-lessons">
+                <button class="lesson-row" data-lesson="Een nummer kiezen"><div class="play">▶</div><div><strong>Een nummer kiezen dat bij je past</strong><small>08:00 · Video</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Songstructuur"><div class="play">▶</div><div><strong>Songstructuur begrijpen</strong><small>12:10 · Video</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Meespelen met de opname"><div class="play">▶</div><div><strong>Meespelen met de opname</strong><small>14:30 · Video + oefening</small></div><span class="lesson-state">Start</span></button>
+                <button class="lesson-row" data-lesson="Eindchallenge"><div class="play">▶</div><div><strong>Eindchallenge: speel je nummer</strong><small>13:00 · Challenge</small></div><span class="lesson-state">Start</span></button>
+              </div>
+            </div>
+          </div>
+
+          <aside>
+            <div class="side-panel">
+              <div class="eyebrow">Jouw doel</div>
+              <h3>Van eerste akkoord naar eerste nummer.</h3>
+              <p style="font-size:.7rem">Volg de lessen in volgorde, maar neem gerust extra tijd bij een oefening.</p>
+              <div class="small-progress"><span></span></div>
+              <p style="font-size:.62rem">42% van deze cursus afgerond</p>
+            </div>
+            <div class="side-panel">
+              <div class="eyebrow">Wat heb je nodig?</div>
+              <div class="side-item"><b>🎸</b><span>Een gitaar waarop je comfortabel kunt spelen.</span></div>
+              <div class="side-item"><b>⏱</b><span>10–20 minuten per dag is genoeg om te beginnen.</span></div>
+              <div class="side-item"><b>📝</b><span>Noteer vragen die je later met je leraar wilt bespreken.</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- PLAYER -->
+      <section class="view" id="player">
+        <div class="player-layout">
+          <div class="player-main">
+            <div class="video" id="videoBox">
+              <div class="video-corner">VIDEO PLACEHOLDER · VERVANG LATER</div>
+              <div class="video-placeholder">
+                <div class="video-symbol">▶</div>
+                <strong id="lessonTitle">Je eerste akkoordwissels</strong>
+                <p>Hier komt jouw video — YouTube, Vimeo, self-hosted of een andere videoplayer.</p>
+              </div>
+            </div>
+
+            <div class="player-info">
+              <div class="eyebrow">Les 03 · Fundament</div>
+              <h1 id="playerHeading">Je eerste akkoordwissels</h1>
+              <p id="playerDescription">In deze les bouwen we rustig aan het wisselen tussen G, C en D. De focus ligt niet op snelheid, maar op ontspannen en netjes spelen.</p>
+              <div class="player-actions">
+                <button class="btn btn-primary" id="completeBtn">✓ Markeer als voltooid</button>
+                <button class="btn btn-light" onclick="saveNote()">Notitie opslaan</button>
+                <button class="btn btn-light" onclick="alert('Hier kun je later je PDF, tabs of oefenbestand koppelen.')">↓ Lesmateriaal</button>
+              </div>
+            </div>
+
+            <div class="exercise-box">
+              <div class="eyebrow">Na de video</div>
+              <h3>Jouw oefening</h3>
+              <p>Maak dit niet moeilijker dan het is. Zet een timer op 5 minuten en blijf rustig tussen de akkoorden wisselen.</p>
+              <div class="checklist">
+                <label class="check"><input type="checkbox"> Ik kan G, C en D afzonderlijk spelen.</label>
+                <label class="check"><input type="checkbox"> Ik kan tussen twee akkoorden wisselen zonder te stoppen.</label>
+                <label class="check"><input type="checkbox"> Ik heb 5 minuten rustig geoefend.</label>
+              </div>
+            </div>
+          </div>
+
+          <aside>
+            <div class="next-card">
+              <div class="eyebrow">In deze module</div>
+              <h3>Je eerste akkoorden</h3>
+              <div class="next-lesson"><strong>✓ Het G-akkoord</strong><span>Voltooid · 09:15</span></div>
+              <div class="next-lesson"><strong>✓ Het C-akkoord</strong><span>Voltooid · 08:50</span></div>
+              <div class="next-lesson" style="background:var(--paper);margin:0 -8px;padding:12px 8px;border-radius:10px"><strong>▶ Je eerste akkoordwissels</strong><span>Nu · 12:20</span></div>
+              <div class="next-lesson"><strong>○ Het D-akkoord</strong><span>Volgende · 11:40</span></div>
+              <div class="next-lesson"><strong>○ Mini challenge</strong><span>10:00</span></div>
+            </div>
+
+            <div class="next-card notes">
+              <div class="eyebrow">Mijn notities</div>
+              <h3>Schrijf iets op</h3>
+              <textarea id="notesField" placeholder="Bijvoorbeeld: C-akkoord lukt nog niet goed..."></textarea>
+              <button class="btn btn-accent btn-small" style="margin-top:9px;width:100%" onclick="saveNote()">Notitie bewaren</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- RESOURCES -->
+      <section class="view" id="resources">
+        <div class="simple-head">
+          <div class="eyebrow">Mijn materiaal</div>
+          <h1>Oefenen <em class="serif">buiten de les.</em></h1>
+          <p>Alles wat je nodig hebt om je lessen ook naast de video's te laten leven.</p>
+        </div>
+        <div class="resource-grid">
+          <article class="resource"><div class="resource-icon">📄</div><h3>Akkoordenkaart</h3><p>Placeholder voor een downloadbare PDF met de belangrijkste akkoorden.</p><button class="btn btn-light btn-small" onclick="placeholderDownload('Akkoordenkaart PDF')">PDF openen →</button></article>
+          <article class="resource"><div class="resource-icon">🥁</div><h3>Metronoom</h3><p>Placeholder voor een ingebouwde metronoom of link naar jouw gekozen tool.</p><button class="btn btn-light btn-small" onclick="placeholderDownload('Metronoom')">Tool openen →</button></article>
+          <article class="resource"><div class="resource-icon">🎵</div><h3>Backing tracks</h3><p>Placeholder voor audio waarop leerlingen kunnen meespelen.</p><button class="btn btn-light btn-small" onclick="placeholderDownload('Backing tracks')">Beluisteren →</button></article>
+          <article class="resource"><div class="resource-icon">✎</div><h3>Oefenplanner</h3><p>Een simpele weekplanner om te zien wat je wanneer hebt geoefend.</p><button class="btn btn-light btn-small" onclick="placeholderDownload('Oefenplanner')">Open planner →</button></article>
+          <article class="resource"><div class="resource-icon">🎸</div><h3>Songbibliotheek</h3><p>Hier kun je later je eigen verzameling songs, tabs en lessen tonen.</p><button class="btn btn-light btn-small" onclick="placeholderDownload('Songbibliotheek')">Bibliotheek →</button></article>
+          <article class="resource"><div class="resource-icon">💬</div><h3>Vraag je leraar</h3><p>Een plek voor vragen die je tijdens het oefenen tegenkomt.</p><button class="btn btn-accent btn-small" onclick="alert('Koppel hier later WhatsApp, e-mail of een echte messagingfunctie.')">Vraag stellen →</button></article>
+        </div>
+      </section>
+
+      <!-- NOTES -->
+      <section class="view" id="notes">
+        <div class="simple-head">
+          <div class="eyebrow">Persoonlijk</div>
+          <h1>Mijn <em class="serif">notities.</em></h1>
+          <p>Bewaar hier dingen die je tijdens het leren niet wilt vergeten.</p>
+        </div>
+        <div class="detail-grid">
+          <div class="module-list">
+            <div class="module-title"><h3>Lesnotities</h3><span>Lokale demo-opslag</span></div>
+            <div class="side-item"><b>Les 03</b><span>G → C gaat al beter. D nog rustig oefenen.</span></div>
+            <div class="side-item"><b>Mijn doel</b><span>Over 4 weken een volledig nummer kunnen spelen.</span></div>
+            <div class="side-item"><b>Vraag</b><span>Hoe krijg ik mijn strumming constanter?</span></div>
+          </div>
+          <div class="side-panel">
+            <div class="eyebrow">Nieuwe notitie</div>
+            <textarea id="globalNote" style="width:100%;min-height:180px;border:1px solid var(--line);border-radius:13px;padding:13px;background:#fff;resize:vertical;outline:none" placeholder="Schrijf hier iets..."></textarea>
+            <button class="btn btn-primary" style="margin-top:10px;width:100%" onclick="saveGlobalNote()">Opslaan</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-bar">
+  <button class="active" data-view="dashboard"><span>⌂</span><span>Overzicht</span></button>
+  <button data-view="course"><span>♫</span><span>Cursus</span></button>
+  <button data-view="player"><span>▶</span><span>Leren</span></button>
+  <button data-view="resources"><span>▤</span><span>Materiaal</span></button>
+</nav>
+
+<!-- LOGIN / ACCOUNT DEMO -->
+<div class="overlay" id="loginOverlay">
+  <div class="login">
+    <button class="login-close" onclick="closeLogin()">×</button>
+    <div class="login-brand">♪ JOUW GITAAR</div>
+    <div class="eyebrow">Studentenportaal</div>
+    <h2>Welkom <em class="serif">terug.</em></h2>
+    <p>Log in om je lessen, voortgang en materiaal te bekijken.</p>
+    <div class="field"><label>E-mailadres</label><input type="email" placeholder="jij@email.com"></div>
+    <div class="field"><label>Wachtwoord</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn btn-primary" onclick="demoLogin()">Inloggen →</button>
+    <p class="demo-note"><b>Demo:</b> deze login is visueel klaar; koppel later Firebase, Supabase of je eigen backend voor echte accounts.</p>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   JOUW GITAAR — STUDENT AREA
+   Alles in dit bestand. Zoek "PLACEHOLDER" om content te vervangen.
+   ========================================================= */
+
+const state = {
+  currentView: "dashboard",
+  selectedLesson: "Je eerste akkoordwissels"
+};
+
+const breadcrumbs = {
+  dashboard:"Overzicht",
+  course:"Mijn cursus",
+  player:"Les bekijken",
+  resources:"Oefeningen & materiaal",
+  notes:"Mijn notities"
+};
+
+function showView(view){
+  if(!document.getElementById(view)) return;
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById(view).classList.add("active");
+  state.currentView=view;
+
+  document.querySelectorAll("[data-view]").forEach(el=>{
+    el.classList.toggle("active",el.dataset.view===view && (el.tagName==="BUTTON"));
+  });
+
+  document.getElementById("breadcrumb").innerHTML =
+    "<b>Mijn lessen</b> <span>·</span> " + breadcrumbs[view];
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.querySelectorAll("[data-view]").forEach(el=>{
+  el.addEventListener("click",()=>{
+    showView(el.dataset.view);
+  });
+});
+
+/* COURSE MODULE ACCORDIONS */
+document.querySelectorAll(".module-head").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    btn.closest(".module").classList.toggle("open");
+  });
+});
+
+/* LESSON ROWS */
+document.querySelectorAll(".lesson-row").forEach(row=>{
+  row.addEventListener("click",()=>{
+    const lesson=row.dataset.lesson || "Nieuwe les";
+    state.selectedLesson=lesson;
+    document.getElementById("lessonTitle").textContent=lesson;
+    document.getElementById("playerHeading").textContent=lesson;
+    document.getElementById("playerDescription").textContent =
+      "PLACEHOLDER: voeg hier de echte beschrijving van deze les toe. Dit is de plek voor je uitleg, leerdoel en extra context.";
+    showView("player");
+  });
+});
+
+/* COMPLETE LES */
+document.getElementById("completeBtn").addEventListener("click",function(){
+  this.textContent="✓ Voltooid";
+  this.classList.remove("btn-primary");
+  this.classList.add("btn-accent");
+  localStorage.setItem("jouwGitaarLessonDone","true");
+  alert("Les gemarkeerd als voltooid. In een echte versie wordt dit gekoppeld aan het account van de leerling.");
+});
+
+if(localStorage.getItem("jouwGitaarLessonDone")==="true"){
+  document.getElementById("completeBtn").textContent="✓ Voltooid";
+  document.getElementById("completeBtn").classList.add("btn-accent");
+}
+
+/* NOTES */
+function saveNote(){
+  const field=document.getElementById("notesField");
+  if(!field.value.trim()){
+    alert("Schrijf eerst een korte notitie.");
+    return;
+  }
+  localStorage.setItem("jouwGitaarNote",field.value);
+  alert("Notitie lokaal bewaard.");
+}
+const savedNote=localStorage.getItem("jouwGitaarNote");
+if(savedNote) document.getElementById("notesField").value=savedNote;
+
+function saveGlobalNote(){
+  const field=document.getElementById("globalNote");
+  if(!field.value.trim()){
+    alert("Schrijf eerst iets op.");
+    return;
+  }
+  localStorage.setItem("jouwGitaarGlobalNote",field.value);
+  alert("Notitie lokaal bewaard.");
+}
+
+/* PLACEHOLDER ACTIONS */
+function openExercise(name){
+  document.getElementById("lessonTitle").textContent=name;
+  document.getElementById("playerHeading").textContent=name;
+  document.getElementById("playerDescription").textContent =
+    "PLACEHOLDER: hier komt de uitleg, video en oefening voor " + name + ".";
+  showView("player");
+}
+function placeholderDownload(name){
+  alert(name + " is een placeholder. Koppel hier later je PDF, audio, video of externe tool.");
+}
+
+/* LOGIN */
+const overlay=document.getElementById("loginOverlay");
+document.getElementById("loginBtn").addEventListener("click",()=>{
+  overlay.classList.add("open");
+  document.body.classList.add("locked");
+});
+document.getElementById("profileBtn").addEventListener("click",()=>{
+  overlay.classList.add("open");
+  document.body.classList.add("locked");
+});
+function closeLogin(){
+  overlay.classList.remove("open");
+  document.body.classList.remove("locked");
+}
+function demoLogin(){
+  closeLogin();
+  alert("Demo-login geslaagd. Voor echte accounts koppel je hier je authentication provider.");
+}
+overlay.addEventListener("click",e=>{
+  if(e.target===overlay) closeLogin();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") closeLogin();
+});
+</script>
+
+</body>
+</html>
